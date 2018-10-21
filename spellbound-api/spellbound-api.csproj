@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>spellbound-api</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
