@@ -9,3 +9,12 @@ Using [Secret Manager](https://docs.microsoft.com/en-us/aspnet/core/security/app
 ``` bash
 dotnet user-secrets set "Movies:ServiceApiKey" "12345"
 ```
+
+## TODO
+
+- Updated CORS policy
+- Add authentication
+- Add rest of the Spells API from spellbound project
+- Add User API
+- Add Character API
+- Add MongoDB Docker container
