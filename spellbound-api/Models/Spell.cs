@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace spellbound_api.Models
 {
-  // Ignoring extra elements for JS Mongoose driver version key "__v"
-  [BsonIgnoreExtraElements]
   public class Spell : Entity
   {
     [Required]
@@ -18,7 +15,7 @@ namespace spellbound_api.Models
     public int Level { get; set; }
 
     [Required]
-    public List<string> ClassTypes { get; set; }
+    public List<ClassType> ClassTypes { get; set; }
 
     [Required]
     public string CastingTime { get; set; }
@@ -27,7 +24,7 @@ namespace spellbound_api.Models
     public string Range { get; set; }
 
     [Required]
-    public List<string> Components { get; set; }
+    public List<Component> Components { get; set; }
 
     [Required]
     public string Duration { get; set; }

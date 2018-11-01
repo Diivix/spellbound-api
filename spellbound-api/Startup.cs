@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using spellbound_api.Services;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.EntityFrameworkCore;
 
 namespace spellbound_api
 {
@@ -30,8 +31,7 @@ namespace spellbound_api
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
       // Configuration
-      services.Configure<MongoDbOptions>(Configuration.GetSection("MongoDb"));
-
+      
       // Add CORS
       // Add service and create Policy with options 
       services.AddCors(options =>
@@ -50,7 +50,8 @@ namespace spellbound_api
       });
 
       // Services
-      services.AddSingleton<IDataService, MongoDbService>();
+      var connection = "Data Source=" + Configuration.GetValue<string>("database");
+      services.AddDbContext<SqliteContext>(options => options.UseSqlite(connection));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
