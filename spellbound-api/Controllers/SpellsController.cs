@@ -12,19 +12,45 @@ namespace spellbound_api.Controllers
   [Route("api/[controller]")]
   public class SpellsController : ControllerBase
   {
-      private readonly SqliteContext _context;
+    private readonly SqliteContext _context;
 
     public SpellsController(SqliteContext context)
     {
-        _context = context;
+      _context = context;
     }
 
+    // GET api/spells/{id}
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
+    public async Task<ActionResult<IEnumerable<Spell>>> Get([FromRoute] int id)
+    {
+      var spell = await _context.Spells.FirstOrDefaultAsync(x => x.Id == id);
+      return Ok(spell);
+    }
+
+    // GET api/spells
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
-    public async Task<ActionResult<IEnumerable<Spell>>> GetSpells()
+    public async Task<ActionResult<IEnumerable<Spell>>> Get()
     {
       var spells = await _context.Spells.ToListAsync();
       return Ok(spells);
+    }
+
+    // POST api/spells
+    [HttpPost]
+    [ProducesResponseType(typeof(IEnumerable<Spell>), 201)]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> Post([FromBody] IEnumerable<Spell> spells)
+    {
+      if (!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+
+      await _context.Spells.AddRangeAsync(spells);
+      _context.SaveChanges();
+      return Created("Post", spells);
     }
   }
 }
