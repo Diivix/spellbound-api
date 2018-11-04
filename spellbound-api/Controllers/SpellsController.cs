@@ -21,22 +21,34 @@ namespace spellbound_api.Controllers
     }
 
     // GET api/spells/{id}
-    [Authorize]
+    // [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
-    public async Task<ActionResult<IEnumerable<Spell>>> Get([FromRoute] int id)
+    public async Task<ActionResult<IEnumerable<Spell>>> Get([FromRoute] int? id)
     {
+      if (id == null)
+        return NotFound();
+
       var spell = await _context.Spells.FirstOrDefaultAsync(x => x.Id == id);
+      if (spell == null)
+        return NotFound(); 
+
       return Ok(spell);
     }
 
-    // GET api/spells
+    // GET api/spells/all?partial=false
     // [Authorize]
-    [HttpGet]
+    [HttpGet("all/")]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
-    public async Task<ActionResult<IEnumerable<Spell>>> Get()
+    public async Task<ActionResult<IEnumerable<Spell>>> GetAll([FromQuery] string partial="false")
     {
       var spells = await _context.Spells.ToListAsync();
+      if (!partial.Equals("true"))
+      {
+        return Ok(spells);
+      }
+
+      spells.ForEach(x => x.LightlyLoad());
       return Ok(spells);
     }
 

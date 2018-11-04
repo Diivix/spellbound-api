@@ -57,5 +57,11 @@ namespace spellbound_api.Models
     public string AtHigherLevels { get; set; }
 
     public string Reference { get; set; }
+
+    public void LightlyLoad() {
+      this.Description = null;
+      this.AtHigherLevels = null;
+      this.Reference = null;
+    }
   }
 }

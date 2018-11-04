@@ -49,4 +49,3 @@ dotnet aspnet-codegenerator controller -name TestController -m Spell -dc Applica
 - Add User API
 - Add Character API
 - Unit tests
-
