@@ -186,8 +186,7 @@ namespace spellboundapi.Migrations
                         .IsRequired()
                         .HasColumnName("Components");
 
-                    b.Property<string>("Description")
-                        .IsRequired();
+                    b.Property<string>("Description");
 
                     b.Property<string>("Duration")
                         .IsRequired();

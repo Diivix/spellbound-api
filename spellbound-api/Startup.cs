@@ -50,7 +50,7 @@ namespace spellbound_api
       });
 
       // Database context
-      var connection = "Data Source=" + Configuration["Database"];
+      var connection = "Data Source=" + Configuration["Database:Connection"];
       services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
 
       // Identity management

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace spellboundapi.Migrations
 {
-    public partial class InitalCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,7 +60,7 @@ namespace spellboundapi.Migrations
                     Components = table.Column<string>(nullable: false),
                     Duration = table.Column<string>(nullable: false),
                     Materials = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
                     AtHigherLevels = table.Column<string>(nullable: true),
                     Reference = table.Column<string>(nullable: true)
                 },

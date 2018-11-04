@@ -52,7 +52,6 @@ namespace spellbound_api.Models
 
     public string Materials { get; set; }
 
-    [Required]
     public string Description { get; set; }
 
     public string AtHigherLevels { get; set; }
