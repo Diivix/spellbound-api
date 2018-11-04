@@ -17,7 +17,6 @@ dotnet ef database update
 ## Secret storage
 
 Using [Secret Manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.1&tabs=macos) for setting secrets in dev environment.
-Example:
 
 ``` bash
 dotnet user-secrets set "MongoDb:ConnectionString" "some_random_value" --project spellbound-api/spellbound-api.csproj
@@ -25,8 +24,10 @@ dotnet user-secrets set "MongoDb:ConnectionString" "some_random_value" --project
 
 ## Identity Management
 
-[Tutorial using Ideneity and Tokens](https://medium.com/@ozgurgul/asp-net-core-2-0-webapi-jwt-authentication-with-identity-mysql-3698eeba6ff8)
-[Second tutorial](https://www.blinkingcaret.com/2017/09/06/secure-web-api-in-asp-net-core/)
+Using ASP.NET Core Identity and JwtToken to manage authentication and authorization. See tutorials:
+
+- [ASP.NET Core Ideneity and Tokens](https://medium.com/@ozgurgul/asp-net-core-2-0-webapi-jwt-authentication-with-identity-mysql-3698eeba6ff8)
+- [ASP.NET Core Tokens](https://www.blinkingcaret.com/2017/09/06/secure-web-api-in-asp-net-core/)
 
 ## Unit Tests
 
