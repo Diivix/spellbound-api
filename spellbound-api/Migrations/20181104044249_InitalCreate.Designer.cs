@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace spellboundapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181104015851_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20181104044249_InitalCreate")]
+    partial class InitalCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -179,8 +179,7 @@ namespace spellboundapi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AtHigherLevels")
-                        .IsRequired();
+                    b.Property<string>("AtHigherLevels");
 
                     b.Property<string>("CastingTime")
                         .IsRequired();
@@ -197,8 +196,7 @@ namespace spellboundapi.Migrations
 
                     b.Property<int>("Level");
 
-                    b.Property<string>("Materials")
-                        .IsRequired();
+                    b.Property<string>("Materials");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -206,8 +204,7 @@ namespace spellboundapi.Migrations
                     b.Property<string>("Range")
                         .IsRequired();
 
-                    b.Property<string>("Reference")
-                        .IsRequired();
+                    b.Property<string>("Reference");
 
                     b.Property<string>("School")
                         .IsRequired();

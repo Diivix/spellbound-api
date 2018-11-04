@@ -177,8 +177,7 @@ namespace spellboundapi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AtHigherLevels")
-                        .IsRequired();
+                    b.Property<string>("AtHigherLevels");
 
                     b.Property<string>("CastingTime")
                         .IsRequired();
@@ -195,8 +194,7 @@ namespace spellboundapi.Migrations
 
                     b.Property<int>("Level");
 
-                    b.Property<string>("Materials")
-                        .IsRequired();
+                    b.Property<string>("Materials");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -204,8 +202,7 @@ namespace spellboundapi.Migrations
                     b.Property<string>("Range")
                         .IsRequired();
 
-                    b.Property<string>("Reference")
-                        .IsRequired();
+                    b.Property<string>("Reference");
 
                     b.Property<string>("School")
                         .IsRequired();

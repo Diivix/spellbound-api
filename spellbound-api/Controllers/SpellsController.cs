@@ -31,7 +31,7 @@ namespace spellbound_api.Controllers
     }
 
     // GET api/spells
-    [Authorize]
+    // [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
     public async Task<ActionResult<IEnumerable<Spell>>> Get()
@@ -41,7 +41,7 @@ namespace spellbound_api.Controllers
     }
 
     // POST api/spells
-    [Authorize]
+    // [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 201)]
     [ProducesResponseType(400)]

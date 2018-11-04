@@ -50,16 +50,13 @@ namespace spellbound_api.Models
     [Required]
     public string Duration { get; set; }
 
-    [Required]
     public string Materials { get; set; }
 
     [Required]
     public string Description { get; set; }
 
-    [Required]
     public string AtHigherLevels { get; set; }
 
-    [Required]
     public string Reference { get; set; }
   }
 }
