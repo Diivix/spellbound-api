@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using spellbound_api.Models;
@@ -12,14 +13,15 @@ namespace spellbound_api.Controllers
   [Route("api/[controller]")]
   public class SpellsController : ControllerBase
   {
-    private readonly SqliteContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public SpellsController(SqliteContext context)
+    public SpellsController(ApplicationDbContext context)
     {
       _context = context;
     }
 
     // GET api/spells/{id}
+    [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
     public async Task<ActionResult<IEnumerable<Spell>>> Get([FromRoute] int id)
@@ -29,6 +31,7 @@ namespace spellbound_api.Controllers
     }
 
     // GET api/spells
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
     public async Task<ActionResult<IEnumerable<Spell>>> Get()
@@ -38,6 +41,7 @@ namespace spellbound_api.Controllers
     }
 
     // POST api/spells
+    [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 201)]
     [ProducesResponseType(400)]

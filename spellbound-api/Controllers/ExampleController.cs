@@ -11,9 +11,9 @@ namespace spellbound_api.Controllers
 {
     public class ExampleController : Controller
     {
-        private readonly SqliteContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ExampleController(SqliteContext context)
+        public ExampleController(ApplicationDbContext context)
         {
             _context = context;
         }

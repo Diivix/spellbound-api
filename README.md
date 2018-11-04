@@ -6,6 +6,7 @@ ASP.NET API for spellbound. Swagger has been included for documentation [Swagger
 
 Using EF Core with SQLite.
 Use the following to create database migrations
+
 ```bash
 dotnet ef migrations add InitialCreate
 dotnet ef database update
@@ -21,6 +22,11 @@ Example:
 ``` bash
 dotnet user-secrets set "MongoDb:ConnectionString" "some_random_value" --project spellbound-api/spellbound-api.csproj
 ```
+
+## Identity Management
+
+[Tutorial using Ideneity and Tokens](https://medium.com/@ozgurgul/asp-net-core-2-0-webapi-jwt-authentication-with-identity-mysql-3698eeba6ff8)
+[Second tutorial](https://www.blinkingcaret.com/2017/09/06/secure-web-api-in-asp-net-core/)
 
 ## Unit Tests
 
@@ -39,5 +45,4 @@ Using xUNit, see tutorials:
 - Add MongoDB Docker container
 - Unit tests
 
-
-dotnet aspnet-codegenerator controller -name TestController -m Spell -dc SqliteContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+dotnet aspnet-codegenerator controller -name TestController -m Spell -dc ApplicationDbConext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries

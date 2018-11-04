@@ -13,6 +13,11 @@ using Microsoft.Extensions.Options;
 using spellbound_api.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace spellbound_api
 {
@@ -28,12 +33,7 @@ namespace spellbound_api
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-      // Configuration
-      
       // Add CORS
-      // Add service and create Policy with options 
       services.AddCors(options =>
       {
         options.AddPolicy("CorsPolicy", builder =>
@@ -43,19 +43,49 @@ namespace spellbound_api
             .AllowCredentials());
       });
 
-      // Register the Swagger generator, defining 1 or more Swagger documents
+      // Add Swagger
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
       });
 
-      // Services
-      var connection = "Data Source=" + Configuration.GetValue<string>("database");
-      services.AddDbContext<SqliteContext>(options => options.UseSqlite(connection));
+      // Database context
+      var connection = "Data Source=" + Configuration["Database"];
+      services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
+
+      // Identity management
+      services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+      // Add Jwt Authentication
+      JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+      services.AddAuthentication(options =>
+          {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+          }).AddJwtBearer(cfg =>
+          {
+            cfg.RequireHttpsMetadata = false;
+            cfg.SaveToken = true;
+            cfg.TokenValidationParameters = new TokenValidationParameters
+            {
+              // ValidIssuer = Configuration["JwtIssuer"],
+              ValidateIssuer = false,
+              // ValidAudience = Configuration["JwtIssuer"],
+              ValidateAudience = false,
+              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+              ClockSkew = TimeSpan.Zero // remove delay of token when expire
+            };
+          });
+
+      // Add MVC
+      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
     {
       if (env.IsDevelopment())
       {

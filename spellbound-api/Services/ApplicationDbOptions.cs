@@ -1,6 +1,6 @@
 namespace spellbound_api.Services
 {
-    public class SqliteOptions
+    public class ApplicationDbOptions
     {
         public string database { get; set; }
     }

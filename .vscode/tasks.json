@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/spellbound-api.csproj"
+                "${workspaceFolder}/spellbound-api//spellbound-api.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
