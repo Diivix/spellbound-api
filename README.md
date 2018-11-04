@@ -35,14 +35,15 @@ Using xUNit, see tutorials:
 - [C# unit testing with xunit](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test)
 - [Testing controllers](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-2.1)
 
+## Code generation
+
+dotnet aspnet-codegenerator controller -name TestController -m Spell -dc ApplicationDbConext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+
 ## TODO
 
-- Updated CORS policy
-- Add authentication
+- Update CORS policy
 - Add rest of the Spells API from spellbound project
 - Add User API
 - Add Character API
-- Add MongoDB Docker container
 - Unit tests
 
-dotnet aspnet-codegenerator controller -name TestController -m Spell -dc ApplicationDbConext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
