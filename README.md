@@ -38,7 +38,9 @@ Using xUNit, see tutorials:
 
 ## Code generation
 
+```bash
 dotnet aspnet-codegenerator controller -name TestController -m Spell -dc ApplicationDbConext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+```
 
 ## TODO
 
