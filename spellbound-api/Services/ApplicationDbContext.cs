@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,17 +20,20 @@ public class ApplicationDbContext : IdentityDbContext<User>
   {
     base.OnModelCreating(modelBuilder);
     modelBuilder.Entity<CharacterSpell>()
-        .HasKey(x => new { x.CharacterId, x.SpellId });
+      .HasKey(x => new { x.CharacterId, x.SpellId });
 
     modelBuilder.Entity<CharacterSpell>()
-        .HasOne(x => x.Character)
-        .WithMany(x => x.CharacterSpells)
-        .HasForeignKey(x => x.CharacterId);
+      .HasOne(x => x.Character)
+      .WithMany(x => x.CharacterSpells)
+      .HasForeignKey(x => x.CharacterId);
 
     modelBuilder.Entity<CharacterSpell>()
-        .HasOne(x => x.Spell)
-        .WithMany(x => x.CharacterSpells)
-        .HasForeignKey(x => x.SpellId);
+      .HasOne(x => x.Spell)
+      .WithMany(x => x.CharacterSpells)
+      .HasForeignKey(x => x.SpellId);
+
+    modelBuilder.Entity<IdentityRole>().HasData(new { Id = Guid.NewGuid().ToString(), Name = "Administration", NormalizedName = "ADMINISTRATION" });
+    modelBuilder.Entity<IdentityRole>().HasData(new { Id = Guid.NewGuid().ToString(), Name = "User", NormalizedName = "USER" });
   }
 
 }
