@@ -12,7 +12,7 @@ dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
-[EF Core Tutorial](https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=netcore-cli)
+- [EF Core Tutorial](https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=netcore-cli)
 
 ## Secret storage
 
@@ -41,6 +41,12 @@ Using xUNit, see tutorials:
 ```bash
 dotnet aspnet-codegenerator controller -name TestController -m Spell -dc ApplicationDbConext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
 ```
+
+## Documentation 
+
+Using Swagger UI (Swashbuckle) [Swagger UI](https://localhost:5001/swagger).
+
+- [Tutorial setting up token auth](https://ppolyzos.com/2017/10/30/add-jwt-bearer-authorization-to-swagger-and-asp-net-core/)
 
 ## TODO
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using spellbound_api.Models;
+using System.Collections.Generic;
 
 namespace spellbound_api
 {
@@ -40,7 +41,21 @@ namespace spellbound_api
       // Add Swagger
       services.AddSwaggerGen(c =>
       {
-        c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+        c.SwaggerDoc("v1", new Info { Title = "Spellbound API", Version = "v1" });
+        c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+        {
+          Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\". Dont forget to add \"Bearer\" at the begining.",
+          Name = "Authorization",
+          In = "header",
+          Type = "apiKey"
+        });
+
+        // Swagger 2+ support for supplying token back to the server on subsequent api calls.
+        var security = new Dictionary<string, IEnumerable<string>>
+        {
+            {"Bearer", new string[] { }},
+        };
+        c.AddSecurityRequirement(security);
       });
 
       // Database context
@@ -84,22 +99,20 @@ namespace spellbound_api
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+        // Enable middleware to serve generated Swagger as a JSON endpoint.
+        app.UseSwagger();
+        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+        // specifying the Swagger JSON endpoint.
+        app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spellbound V1"); c.DocExpansion(DocExpansion.None); });
       }
       else
       {
         app.UseHsts();
       }
 
-      // Enable middleware to serve generated Swagger as a JSON endpoint.
-      app.UseSwagger();
-
-      // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-      // specifying the Swagger JSON endpoint.
-      app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
-
-      app.UseCors("CorsPolicy");
       app.UseHttpsRedirection();
-      // app.UseAuthentication();
+      app.UseCors("CorsPolicy");
+      app.UseAuthentication();
       app.UseMvc();
     }
   }
