@@ -9,6 +9,7 @@ using spellbound_api.Models;
 
 namespace spellbound_api.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   public class SpellsController : ControllerBase
   {
@@ -20,7 +21,6 @@ namespace spellbound_api.Controllers
     }
 
     // GET api/spells/{id}
-    [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
     [ProducesResponseType(404)]
@@ -37,7 +37,6 @@ namespace spellbound_api.Controllers
     }
 
     // GET api/spells/all?partial=false
-    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
     public async Task<ActionResult<IEnumerable<Spell>>> Get([FromQuery] string partial = "false")
@@ -53,7 +52,6 @@ namespace spellbound_api.Controllers
     }
 
     // POST api/spells
-    [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 201)]
     [ProducesResponseType(400)]
@@ -70,7 +68,6 @@ namespace spellbound_api.Controllers
     }
 
     // GET api/spells/all
-    [Authorize]
     [HttpDelete]
     [ProducesResponseType(200)]
     public async Task<ActionResult<IEnumerable<Spell>>> Delete()

@@ -36,6 +36,11 @@ namespace spellboundapi.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new { Id = "87f84d71-3566-43cd-b4ca-a90157e5ce49", Name = "Administration", NormalizedName = "ADMINISTRATION" },
+                        new { Id = "343df687-f476-45b9-9923-bf46c3d4bdd9", Name = "User", NormalizedName = "USER" }
+                    );
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

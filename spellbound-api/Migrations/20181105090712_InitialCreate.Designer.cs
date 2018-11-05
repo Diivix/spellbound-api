@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace spellboundapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181105032046_InitialCreate")]
+    [Migration("20181105090712_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,11 @@ namespace spellboundapi.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new { Id = "87f84d71-3566-43cd-b4ca-a90157e5ce49", Name = "Administration", NormalizedName = "ADMINISTRATION" },
+                        new { Id = "343df687-f476-45b9-9923-bf46c3d4bdd9", Name = "User", NormalizedName = "USER" }
+                    );
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -29,14 +29,14 @@ namespace spellbound_api
     public void ConfigureServices(IServiceCollection services)
     {
       // Add CORS
-      services.AddCors(options =>
-      {
-        options.AddPolicy("CorsPolicy", builder =>
-            builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
-      });
+      services.AddCors(options => options
+        .AddPolicy("CorsPolicy", builder => builder
+          .WithOrigins("https://localhost", "https://localhost:5001", "https://localhost:3000")
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials()
+          )
+        );
 
       // Add Swagger
       services.AddSwaggerGen(c =>
@@ -64,6 +64,7 @@ namespace spellbound_api
 
       // Identity management
       services.AddIdentity<User, IdentityRole>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -80,9 +81,9 @@ namespace spellbound_api
             cfg.SaveToken = true;
             cfg.TokenValidationParameters = new TokenValidationParameters
             {
-              // ValidIssuer = Configuration["JwtIssuer"],
-              ValidateIssuer = false,
-              // ValidAudience = Configuration["JwtIssuer"],
+              ValidIssuer = Configuration["JwtIssuer"],
+              ValidateIssuer = true,
+              ValidAudience = Configuration["JwtAudience"],
               ValidateAudience = false,
               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
               ClockSkew = TimeSpan.Zero // remove delay of token when expire
