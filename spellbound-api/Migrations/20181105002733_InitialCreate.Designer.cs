@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace spellboundapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181104054838_InitialCreate")]
+    [Migration("20181105002733_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -183,6 +183,10 @@ namespace spellboundapi.Migrations
 
                     b.Property<string>("CastingTime")
                         .IsRequired();
+
+                    b.Property<string>("ClassTypesSerialized")
+                        .IsRequired()
+                        .HasColumnName("ClassTypes");
 
                     b.Property<string>("ComponentsSerialized")
                         .IsRequired()

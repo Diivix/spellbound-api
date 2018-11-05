@@ -182,6 +182,10 @@ namespace spellboundapi.Migrations
                     b.Property<string>("CastingTime")
                         .IsRequired();
 
+                    b.Property<string>("ClassTypesSerialized")
+                        .IsRequired()
+                        .HasColumnName("ClassTypes");
+
                     b.Property<string>("ComponentsSerialized")
                         .IsRequired()
                         .HasColumnName("Components");

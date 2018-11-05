@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using spellbound_api.Models;
-using spellbound_api.Services;
 
 namespace spellbound_api.Controllers
 {
@@ -24,6 +23,7 @@ namespace spellbound_api.Controllers
     // [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
+    [ProducesResponseType(404)]
     public async Task<ActionResult<IEnumerable<Spell>>> Get([FromRoute] int? id)
     {
       if (id == null)
@@ -38,9 +38,9 @@ namespace spellbound_api.Controllers
 
     // GET api/spells/all?partial=false
     // [Authorize]
-    [HttpGet("all/")]
+    [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
-    public async Task<ActionResult<IEnumerable<Spell>>> GetAll([FromQuery] string partial="false")
+    public async Task<ActionResult<IEnumerable<Spell>>> Get([FromQuery] string partial="false")
     {
       var spells = await _context.Spells.ToListAsync();
       if (!partial.Equals("true"))
@@ -67,6 +67,17 @@ namespace spellbound_api.Controllers
       await _context.Spells.AddRangeAsync(spells);
       _context.SaveChanges();
       return Created("Post", spells);
+    }
+
+    // GET api/spells/all
+    // [Authorize]
+    [HttpDelete]
+    [ProducesResponseType(200)]
+    public async Task<ActionResult<IEnumerable<Spell>>> Delete()
+    {
+      _context.Spells.RemoveRange(_context.Spells);
+      await _context.SaveChangesAsync();
+      return Ok();
     }
   }
 }

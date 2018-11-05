@@ -55,6 +55,7 @@ namespace spellboundapi.Migrations
                     Name = table.Column<string>(nullable: false),
                     School = table.Column<string>(nullable: false),
                     Level = table.Column<int>(nullable: false),
+                    ClassTypes = table.Column<string>(nullable: false),
                     CastingTime = table.Column<string>(nullable: false),
                     Range = table.Column<string>(nullable: false),
                     Components = table.Column<string>(nullable: false),

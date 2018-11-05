@@ -23,7 +23,7 @@ namespace spellbound_api.Models
     [JsonIgnore]
     [Required]
     [Column("ClassTypes")]
-    private string ClassTypesSerialized
+    public string ClassTypesSerialized
     {
       get => JsonConvert.SerializeObject(ClassTypes);
       set => ClassTypes = String.IsNullOrEmpty(value) ? new List<string>() : JsonConvert.DeserializeObject<List<string>>(value);
