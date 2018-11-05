@@ -31,7 +31,7 @@ namespace spellbound_api.Controllers
 
       var spell = await _context.Spells.FirstOrDefaultAsync(x => x.Id == id);
       if (spell == null)
-        return NotFound(); 
+        return NotFound();
 
       return Ok(spell);
     }
@@ -40,7 +40,7 @@ namespace spellbound_api.Controllers
     // [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
-    public async Task<ActionResult<IEnumerable<Spell>>> Get([FromQuery] string partial="false")
+    public async Task<ActionResult<IEnumerable<Spell>>> Get([FromQuery] string partial = "false")
     {
       var spells = await _context.Spells.ToListAsync();
       if (!partial.Equals("true"))
@@ -57,13 +57,13 @@ namespace spellbound_api.Controllers
     [HttpPost]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 201)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Post([FromBody] IEnumerable<Spell> spells)
+    public async Task<IActionResult> Post([FromBody] List<Spell> spells)
     {
       if (!ModelState.IsValid)
       {
         return BadRequest(ModelState);
       }
-
+      spells.ForEach(x => { x.CreatedDate = DateTime.Now; x.ModifiedDate = DateTime.Now; });
       await _context.Spells.AddRangeAsync(spells);
       _context.SaveChanges();
       return Created("Post", spells);

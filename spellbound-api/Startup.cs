@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using spellbound_api.Models;
 
 namespace spellbound_api
 {
@@ -47,7 +48,7 @@ namespace spellbound_api
       services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
 
       // Identity management
-      services.AddIdentity<IdentityUser, IdentityRole>()
+      services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -94,13 +95,11 @@ namespace spellbound_api
 
       // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
       // specifying the Swagger JSON endpoint.
-      app.UseSwaggerUI(c =>
-      {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-      });
+      app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
 
       app.UseCors("CorsPolicy");
       app.UseHttpsRedirection();
+      // app.UseAuthentication();
       app.UseMvc();
     }
   }

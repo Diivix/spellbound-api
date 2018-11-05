@@ -17,11 +17,11 @@ namespace spellbound_api.Controllers
   [Route("[controller]/[action]")]
   public class AccountController : ControllerBase
   {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
     {
       _userManager = userManager;
       _signInManager = signInManager;
@@ -29,21 +29,26 @@ namespace spellbound_api.Controllers
     }
 
     [HttpPost]
-    public async Task<Object> Login([FromBody] LoginDto model)
+    [ProducesResponseType(typeof(User), 200)]
+    [ProducesResponseType(401)]
+    public async Task<ActionResult<User>> Login([FromBody] LoginDto model)
     {
       var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
       if (result.Succeeded)
       {
         var user = _userManager.Users.FirstOrDefault(x => x.Email == model.Email);
-        return GenerateJwtTocken(user);
+        user.Token = GenerateJwtTocken(user);
+        return Ok(user);
       }
 
-      throw new UnauthorizedAccessException();
+      return Unauthorized();
     }
 
     [HttpPost]
-    public async Task<Object> Register([FromBody] RegisterDto model) {
-        var user = new IdentityUser {
+    [ProducesResponseType(typeof(User), 200)]
+    [ProducesResponseType(500)]
+    public async Task<ActionResult<User>> Register([FromBody] RegisterDto model) {
+        var user = new User {
             Email = model.Email,
             UserName = model.Email
         };
@@ -52,13 +57,14 @@ namespace spellbound_api.Controllers
         if(result.Succeeded) 
         {
             await _signInManager.SignInAsync(user, false);
-            return GenerateJwtTocken(user);
+            user.Token = GenerateJwtTocken(user);
+            return Ok(user);
         }
 
-        throw new SystemException();
+        return StatusCode(500);
     }
 
-    private object GenerateJwtTocken(IdentityUser user)
+    private string GenerateJwtTocken(IdentityUser user)
     {
       var claims = new List<Claim> {
             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
