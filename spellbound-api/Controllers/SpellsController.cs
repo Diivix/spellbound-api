@@ -11,6 +11,7 @@ namespace spellbound_api.Controllers
 {
   [Authorize(Policy = "UserAuth")]
   [Route("api/[controller]")]
+  [ProducesResponseType(401)]
   public class SpellsController : ControllerBase
   {
     private readonly ApplicationDbContext _context;
@@ -51,7 +52,7 @@ namespace spellbound_api.Controllers
       return Ok(spells);
     }
 
-    // POST api/spells
+    // POST api/Spells
     [HttpPost]
     [ProducesResponseType(typeof(IEnumerable<Spell>), 201)]
     [ProducesResponseType(400)]
@@ -64,7 +65,7 @@ namespace spellbound_api.Controllers
       spells.ForEach(x => { x.CreatedDate = DateTime.Now; x.ModifiedDate = DateTime.Now; });
       await _context.Spells.AddRangeAsync(spells);
       _context.SaveChanges();
-      return Created("Post", spells);
+      return Created(HttpContext.Request.Path, spells);
     }
 
     // GET api/spells/all

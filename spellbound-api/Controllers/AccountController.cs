@@ -18,6 +18,7 @@ namespace spellbound_api.Controllers
 {
   [Authorize(Policy = "UserAuth")]
   [Route("[controller]/[action]")]
+  [ProducesResponseType(401)]
   public class AccountController : ControllerBase
   {
     private readonly SignInManager<User> _signInManager;
@@ -53,7 +54,7 @@ namespace spellbound_api.Controllers
         {
           await _signInManager.SignInAsync(user, false);
           await _userManager.AddToRoleAsync(user, roles.Name);
-          user.Token = await GenerateJwtToken(user, roles.Name);
+          user.Token = GenerateJwtToken(user, roles.Name);
           return Ok(user);
         }
         return NotFound("User role not found.");
@@ -75,7 +76,7 @@ namespace spellbound_api.Controllers
         if (user != null)
         {
           var roles = await _userManager.GetRolesAsync(user);
-          user.Token = await GenerateJwtToken(user, roles.ToList());
+          user.Token = GenerateJwtToken(user, roles.ToList());
           return Ok(user);
         }
       }
@@ -92,22 +93,21 @@ namespace spellbound_api.Controllers
       return Ok();
     }
 
-    private Task<string> GenerateJwtToken(User user, string role)
+    private string GenerateJwtToken(User user, string role)
     {
       List<string> roles = new List<string> { role };
       return GenerateJwtToken(user, roles);
     }
 
-    private async Task<string> GenerateJwtToken(User user, List<string> roles)
+    private string GenerateJwtToken(User user, List<string> roles)
     {
       var claims = new List<Claim>
       {
         new Claim(JwtRegisteredClaimNames.Sub, "spellbound_token"),
-        new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
+        new Claim(JwtRegisteredClaimNames.NameId, user.Id),
         new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"]),
         new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(ClaimTypes.NameIdentifier,  user.Id),
       };
 
       roles.ForEach(x => claims.Add(new Claim("roles", x)));
