@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using spellbound_api.Models;
 
 namespace spellbound_api.Controllers
 {
-  [Authorize]
+  [Authorize(Policy = "UserAuth")]
   [Route("[controller]/[action]")]
   public class AccountController : ControllerBase
   {
@@ -35,23 +36,6 @@ namespace spellbound_api.Controllers
     [AllowAnonymous]
     [HttpPost]
     [ProducesResponseType(typeof(User), 200)]
-    [ProducesResponseType(401)]
-    public async Task<ActionResult<User>> SignIn([FromBody] LoginDto model)
-    {
-      var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-      if (result.Succeeded)
-      {
-        var user = _userManager.Users.FirstOrDefault(x => x.Email == model.Email);
-        user.Token = GenerateJwtTocken(user);
-        return Ok(user);
-      }
-
-      return Unauthorized();
-    }
-
-    [AllowAnonymous]
-    [HttpPost]
-    [ProducesResponseType(typeof(User), 200)]
     [ProducesResponseType(500)]
     public async Task<ActionResult<User>> Register([FromBody] RegisterDto model)
     {
@@ -60,21 +44,43 @@ namespace spellbound_api.Controllers
         Email = model.Email,
         UserName = model.Email
       };
-      var role = new IdentityRole
-      {
-        Name = "user"
-      };
 
       var result = await _userManager.CreateAsync(user, model.Password);
       if (result.Succeeded)
       {
-        await _signInManager.SignInAsync(user, false);
-        user.Token = GenerateJwtTocken(user);
-        // await _userManager.AddToRoleAsync(user, "User");
-        return Ok(user);
+        var roles = _roleManager.Roles.FirstOrDefault(x => x.NormalizedName == "USER");
+        if (roles != null)
+        {
+          await _signInManager.SignInAsync(user, false);
+          await _userManager.AddToRoleAsync(user, roles.Name);
+          user.Token = await GenerateJwtToken(user, roles.Name);
+          return Ok(user);
+        }
+        return NotFound("User role not found.");
       }
 
       return StatusCode(500);
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    [ProducesResponseType(typeof(User), 200)]
+    [ProducesResponseType(401)]
+    public async Task<ActionResult<User>> SignIn([FromBody] LoginDto model)
+    {
+      var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+      if (result.Succeeded)
+      {
+        var user = _userManager.Users.SingleOrDefault(x => x.Email == model.Email);
+        if (user != null)
+        {
+          var roles = await _userManager.GetRolesAsync(user);
+          user.Token = await GenerateJwtToken(user, roles.ToList());
+          return Ok(user);
+        }
+      }
+
+      return Unauthorized();
     }
 
     [HttpGet]
@@ -86,21 +92,29 @@ namespace spellbound_api.Controllers
       return Ok();
     }
 
-    private string GenerateJwtTocken(IdentityUser user)
+    private Task<string> GenerateJwtToken(User user, string role)
+    {
+      List<string> roles = new List<string> { role };
+      return GenerateJwtToken(user, roles);
+    }
+
+    private async Task<string> GenerateJwtToken(User user, List<string> roles)
     {
       var claims = new List<Claim>
       {
-        new Claim(JwtRegisteredClaimNames.Sub, $"spellbound_token"),
+        new Claim(JwtRegisteredClaimNames.Sub, "spellbound_token"),
         new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
-        new Claim(JwtRegisteredClaimNames.Iss, _configuration["JwtIssuer"]),
-        new Claim(JwtRegisteredClaimNames.Aud, _configuration["JwtAudience"]),
+        new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"]),
+        new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(ClaimTypes.NameIdentifier,  user.Id)
+        new Claim(ClaimTypes.NameIdentifier,  user.Id),
       };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
+      roles.ForEach(x => claims.Add(new Claim("roles", x)));
+
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
       var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-      var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
+      var expires = DateTime.Now.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"]));
 
       var token = new JwtSecurityToken(null, null, claims, expires: expires, signingCredentials: creds);
       return new JwtSecurityTokenHandler().WriteToken(token);

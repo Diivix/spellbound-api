@@ -9,7 +9,7 @@ using spellbound_api.Models;
 
 namespace spellbound_api.Controllers
 {
-  [Authorize]
+  [Authorize(Policy = "UserAuth")]
   [Route("api/[controller]")]
   public class SpellsController : ControllerBase
   {

@@ -32,8 +32,10 @@ public class ApplicationDbContext : IdentityDbContext<User>
       .WithMany(x => x.CharacterSpells)
       .HasForeignKey(x => x.SpellId);
 
-    modelBuilder.Entity<IdentityRole>().HasData(new { Id = Guid.NewGuid().ToString(), Name = "Administration", NormalizedName = "ADMINISTRATION" });
-    modelBuilder.Entity<IdentityRole>().HasData(new { Id = Guid.NewGuid().ToString(), Name = "User", NormalizedName = "USER" });
+    var adminId = Guid.NewGuid().ToString();
+    var userId = Guid.NewGuid().ToString();
+    modelBuilder.Entity<IdentityRole>().HasData(new { Id = adminId, Name = "Admin", NormalizedName = "ADMIN" });
+    modelBuilder.Entity<IdentityRole>().HasData(new { Id = userId, Name = "User", NormalizedName = "USER" });
   }
 
 }

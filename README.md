@@ -24,10 +24,16 @@ dotnet user-secrets set "MongoDb:ConnectionString" "some_random_value" --project
 
 ## Identity Management
 
-Using ASP.NET Core Identity and JwtToken to manage authentication and authorization. See tutorials:
+Using ASP.NET Core Identity and JWT Tokens to manage authentication and authorization. Tokens are self signed using a symmetric secret key.
+
+- Created users will be added the "User" IdentityRole.
+- The IdentityRoles a user is a member of will also be added to the "roles" claim on their issued JWT.
+
+See tutorials:
 
 - [ASP.NET Core Ideneity and Tokens](https://medium.com/@ozgurgul/asp-net-core-2-0-webapi-jwt-authentication-with-identity-mysql-3698eeba6ff8)
 - [ASP.NET Core Tokens](https://www.blinkingcaret.com/2017/09/06/secure-web-api-in-asp-net-core/)
+- [.NET Blog on Tokens](https://blogs.msdn.microsoft.com/webdev/2017/04/06/jwt-validation-and-authorization-in-asp-net-core/)
 
 ## Unit Tests
 

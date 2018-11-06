@@ -81,21 +81,28 @@ namespace spellbound_api
             cfg.SaveToken = true;
             cfg.TokenValidationParameters = new TokenValidationParameters
             {
-              ValidIssuer = Configuration["JwtIssuer"],
+              ValidateIssuerSigningKey = true,
+              ValidIssuer = Configuration["Jwt:Issuer"],
               ValidateIssuer = true,
-              ValidAudience = Configuration["JwtAudience"],
+              ValidAudience = Configuration["Jwt:Audience"],
               ValidateAudience = false,
-              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
               ClockSkew = TimeSpan.Zero // remove delay of token when expire
             };
           });
+
+      services.AddAuthorization(options =>
+      {
+        options.AddPolicy("UserAuth", policy => policy.RequireClaim("roles", "User"));
+        options.AddPolicy("AdminAuth", policy => policy.RequireClaim("roles", "Administration"));
+      });
 
       // Add MVC
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext, UserManager<User> userManager)
     {
       if (env.IsDevelopment())
       {
@@ -105,6 +112,12 @@ namespace spellbound_api
         // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
         // specifying the Swagger JSON endpoint.
         app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spellbound V1"); c.DocExpansion(DocExpansion.None); });
+        
+        // Seed database with admin user. A non-terminating exception will be thrown if the account exists.
+        User user = new User { UserName = "admin", Email = "admin" };
+        userManager.CreateAsync(user, "password");
+        userManager.AddToRoleAsync(user, "User");
+        userManager.AddToRoleAsync(user, "Admin");
       }
       else
       {
