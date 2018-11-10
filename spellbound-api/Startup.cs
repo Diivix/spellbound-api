@@ -31,7 +31,7 @@ namespace spellbound_api
       // Add CORS
       services.AddCors(options => options
         .AddPolicy("CorsPolicy", builder => builder
-          .WithOrigins("https://localhost", "https://localhost:5001", "https://localhost:3000")
+          .WithOrigins("https://localhost", "https://localhost:5001", "https://localhost:3000", "http://localhost:5000", "http://localhost:5001", "http://localhost:3000")
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
