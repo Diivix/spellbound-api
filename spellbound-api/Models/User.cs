@@ -12,9 +12,7 @@ namespace spellbound_api.Models
   {
     [JsonProperty]
     public override string UserName { get; set; }
-    [JsonProperty]
-    [NotMapped]
-    public string Token { get; set; }
+    
     [PersonalData]
     [JsonProperty]
     public List<Character> Characters { get; set; }

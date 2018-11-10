@@ -58,6 +58,7 @@ namespace spellbound_api.Models
 
     public string Reference { get; set; }
 
+    [JsonIgnore]
     public List<CharacterSpell> CharacterSpells { get; set; }
 
     public void LightlyLoad()

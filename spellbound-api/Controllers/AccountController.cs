@@ -17,7 +17,7 @@ using spellbound_api.Models;
 namespace spellbound_api.Controllers
 {
   [Authorize(Policy = "UserAuth")]
-  [Route("[controller]/[action]")]
+  [Route("api/[controller]/[action]")]
   [ProducesResponseType(401)]
   public class AccountController : ControllerBase
   {
@@ -36,9 +36,9 @@ namespace spellbound_api.Controllers
 
     [AllowAnonymous]
     [HttpPost]
-    [ProducesResponseType(typeof(User), 200)]
+    [ProducesResponseType(typeof(UserWithToken), 200)]
     [ProducesResponseType(500)]
-    public async Task<ActionResult<User>> Register([FromBody] RegisterDto model)
+    public async Task<ActionResult<UserWithToken>> Register([FromBody] RegisterDto model)
     {
       var user = new User
       {
@@ -54,8 +54,12 @@ namespace spellbound_api.Controllers
         {
           await _signInManager.SignInAsync(user, false);
           await _userManager.AddToRoleAsync(user, roles.Name);
-          user.Token = GenerateJwtToken(user, roles.Name);
-          return Ok(user);
+          var userWithToken = new UserWithToken
+          {
+            Token = GenerateJwtToken(user, roles.Name),
+            User = user
+          };
+          return Ok(userWithToken);
         }
         return NotFound("User role not found.");
       }
@@ -65,9 +69,9 @@ namespace spellbound_api.Controllers
 
     [AllowAnonymous]
     [HttpPost]
-    [ProducesResponseType(typeof(User), 200)]
+    [ProducesResponseType(typeof(UserWithToken), 200)]
     [ProducesResponseType(401)]
-    public async Task<ActionResult<User>> SignIn([FromBody] LoginDto model)
+    public async Task<ActionResult<UserWithToken>> SignIn([FromBody] LoginDto model)
     {
       var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
       if (result.Succeeded)
@@ -76,8 +80,13 @@ namespace spellbound_api.Controllers
         if (user != null)
         {
           var roles = await _userManager.GetRolesAsync(user);
-          user.Token = GenerateJwtToken(user, roles.ToList());
-          return Ok(user);
+          var userWithToken = new UserWithToken
+          {
+            Token = GenerateJwtToken(user, roles.ToList()),
+            User = user
+          };
+
+          return Ok(userWithToken);
         }
       }
 

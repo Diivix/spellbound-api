@@ -115,7 +115,7 @@ namespace spellbound_api
         
         // Seed database with admin user. A non-terminating exception will be thrown if the account exists.
         User user = new User { UserName = "admin", Email = "admin" };
-        userManager.CreateAsync(user, "password");
+        userManager.CreateAsync(user, "Password1!");
         userManager.AddToRoleAsync(user, "User");
         userManager.AddToRoleAsync(user, "Admin");
       }
