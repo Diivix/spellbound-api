@@ -44,7 +44,7 @@ namespace spellbound_api.Controllers
     public async Task<ActionResult<List<Character>>> GetByUserId()
     {
       var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "nameid").Value;
-      var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
+      var user = await _context.Users.Include(c => c.Characters).SingleOrDefaultAsync(x => x.Id == userId);
       if (user == null)
         return NotFound("User not found.");
 
@@ -53,12 +53,12 @@ namespace spellbound_api.Controllers
 
     // POST api/characters
     [HttpPost]
-    [ProducesResponseType(typeof(List<Character>), 200)]
+    [ProducesResponseType(typeof(Character), 201)]
     [ProducesResponseType(404)]
     public async Task<ActionResult<Character>> Post([FromBody] Character character)
     {
       var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "nameid").Value;
-      var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
+      var user = await _context.Users.Include(c => c.Characters).SingleOrDefaultAsync(x => x.Id == userId);
       if (user == null)
         return NotFound("User not found.");
 
@@ -76,7 +76,7 @@ namespace spellbound_api.Controllers
     public async Task<ActionResult<Character>> Put([FromBody] Character character)
     {
       var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "nameid").Value;
-      var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
+      var user = await _context.Users.Include(c => c.Characters).SingleOrDefaultAsync(x => x.Id == userId);
       if (user == null)
         return NotFound("User not found.");
 

@@ -21,7 +21,7 @@ namespace spellbound_api.Controllers
   [ProducesResponseType(401)]
   public class AccountController : ControllerBase
   {
-    private readonly SignInManager<User> _signInManager;
+        private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
