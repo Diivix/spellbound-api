@@ -22,15 +22,15 @@ public class ApplicationDbContext : IdentityDbContext<User>
     modelBuilder.Entity<CharacterSpell>()
       .HasKey(x => new { x.CharacterId, x.SpellId });
 
-    modelBuilder.Entity<CharacterSpell>()
-      .HasOne(x => x.Character)
-      .WithMany(x => x.CharacterSpells)
-      .HasForeignKey(x => x.CharacterId);
+    // modelBuilder.Entity<CharacterSpell>()
+    //   .HasOne(x => x.Character)
+    //   .WithMany(x => x.CharacterSpells)
+    //   .HasForeignKey(x => x.CharacterId);
 
-    modelBuilder.Entity<CharacterSpell>()
-      .HasOne(x => x.Spell)
-      .WithMany(x => x.CharacterSpells)
-      .HasForeignKey(x => x.SpellId);
+    // modelBuilder.Entity<CharacterSpell>()
+    //   .HasOne(x => x.Spell)
+    //   .WithMany(x => x.CharacterSpells)
+    //   .HasForeignKey(x => x.SpellId);
 
     var adminId = Guid.NewGuid().ToString();
     var userId = Guid.NewGuid().ToString();

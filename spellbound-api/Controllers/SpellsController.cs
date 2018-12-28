@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using spellbound_api.Models;
+using spellbound_api.Services;
 
 namespace spellbound_api.Controllers
 {
@@ -30,7 +31,7 @@ namespace spellbound_api.Controllers
       if (id == null)
         return NotFound();
 
-      var spell = await _context.Spells.FirstOrDefaultAsync(x => x.Id == id);
+      var spell = await SpellService.GetById(_context, id.Value);
       if (spell == null)
         return NotFound();
 
@@ -42,7 +43,7 @@ namespace spellbound_api.Controllers
     [ProducesResponseType(typeof(IEnumerable<Spell>), 200)]
     public async Task<ActionResult<IEnumerable<Spell>>> Get([FromQuery] string partial = "false")
     {
-      var spells = await _context.Spells.ToListAsync();
+      var spells = await SpellService.GetAll(_context);
       if (!partial.Equals("true"))
       {
         return Ok(spells);

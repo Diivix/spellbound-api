@@ -230,12 +230,12 @@ namespace spellboundapi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "61b6bf9c-b042-4c12-a464-713f0eaa9442", null, "Admin", "ADMIN" });
+                values: new object[] { "43c4e1a0-ae32-4cd6-83fe-c5eba30aa66d", null, "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "5e4d4447-72b6-4e86-a015-3872e448f97e", null, "User", "USER" });
+                values: new object[] { "b362deb8-8213-45c3-ab74-bc8a92f83248", null, "User", "USER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
