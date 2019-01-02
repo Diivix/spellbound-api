@@ -27,10 +27,10 @@ namespace spellbound_api.Models
             ClassType = character.ClassType,
             Level = character.Level,
             Description = character.Description,
-            Spells = character.CharacterSpells.Select(x => x.Spell).ToList()
+            Spells = character.CharacterSpells?.Select(x => x.Spell).ToList()
         };
         
-        model.Spells.ForEach(x => x.LightlyLoad());
+        model.Spells?.ForEach(x => x.LightlyLoad());
         return model;
     }
   }
