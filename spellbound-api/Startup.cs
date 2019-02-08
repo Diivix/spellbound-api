@@ -31,7 +31,7 @@ namespace spellbound_api
       // Add CORS
       services.AddCors(options => options
         .AddPolicy("CorsPolicy", builder => builder
-          .WithOrigins("https://localhost", "https://localhost:5001/", "https://localhost:3000", "http://localhost:5000", "http://localhost:5001", "http://localhost:3000")
+          .WithOrigins(Configuration.GetSection("Cors:WithOrigins").Get<String[]>())
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
@@ -102,7 +102,7 @@ namespace spellbound_api
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext, UserManager<User> userManager)
+    public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext, UserManager<User> userManager)
     {
       if (env.IsDevelopment())
       {
@@ -112,19 +112,22 @@ namespace spellbound_api
         // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
         // specifying the Swagger JSON endpoint.
         app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spellbound V1"); c.DocExpansion(DocExpansion.None); });
-        
-        // Seed database with admin user. A non-terminating exception will be thrown if the account exists.
-        User user = new User { UserName = "admin", Email = "admin" };
-        userManager.CreateAsync(user, "Password1!");
-        userManager.AddToRoleAsync(user, "User");
-        userManager.AddToRoleAsync(user, "Admin");
       }
-      else
+      else // Production
       {
         app.UseHsts();
+        app.UseHttpsRedirection();
       }
 
-      app.UseHttpsRedirection();
+      // Seed database with admin user. A non-terminating exception will be thrown if the account exists.
+      var existingAdmin = await userManager.FindByEmailAsync(Configuration["AdminUser:Email"]);
+      if(existingAdmin == null) {
+        User user = new User { UserName = Configuration["AdminUser:Name"], Email = Configuration["AdminUser:Email"] };
+        await userManager.CreateAsync(user, Configuration["AdminUser:Password"]);
+        await userManager.AddToRoleAsync(user, "User");
+        await userManager.AddToRoleAsync(user, "Admin");
+      }
+
       app.UseCors("CorsPolicy");
       app.UseAuthentication();
       app.UseMvc();
