@@ -1,7 +1,11 @@
-FROM gliderlabs/alpine:latest
-RUN apk add --update sqlite
-RUN mkdir /data
-RUN /usr/bin/sqlite3 /data/spellbound.db
-CMD /bin/sh
+FROM microsoft/dotnet:2.1-sdk
+WORKDIR /app
 
-# docker run -it -v /home/dbfolder/:/db imagename
+# copy csproj and restore as distinct layers
+COPY spellbound-api/spellbound-api.csproj ./
+RUN dotnet restore
+
+# copy and build everything else
+COPY spellbound-api/* ./
+RUN dotnet publish -c Release -o out
+ENTRYPOINT ["dotnet", "out/spellbound-api.dll"]
